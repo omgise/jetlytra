@@ -1,0 +1,19 @@
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Eclipse
+.settings/
+.project
+.classpath
+
+# Common
+src/main/resources/mixins.*.json
+.DS_Store
+.gradle
+run/
+build/
+bin/
+out/
