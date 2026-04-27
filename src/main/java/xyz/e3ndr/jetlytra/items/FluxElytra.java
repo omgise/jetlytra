@@ -1,6 +1,7 @@
 package xyz.e3ndr.jetlytra.items;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.lib.util.helpers.EnergyHelper;
@@ -16,6 +17,9 @@ public class FluxElytra extends CustomElytra implements IEnergyContainerItem {
     private static final int BOOST_CONSUMPTION_RATE = 200; // RF/tick key held down
     private static final int COLLISION_ABSORB_RATE = 300; // RF/damage
 
+    private static final int HOUR_IN_SECONDS = (int) TimeUnit.HOURS.toSeconds(1);
+    private static final int MINUTE_IN_SECONDS = (int) TimeUnit.MINUTES.toSeconds(1);
+
     private final int capacity;
     private final int maxReceive;
 
@@ -30,14 +34,37 @@ public class FluxElytra extends CustomElytra implements IEnergyContainerItem {
     /* ---------------------------------------------------------------- */
 
     @Override
-    public boolean onBoostTick(ItemStack container) {
-        return this.consume(container, BOOST_CONSUMPTION_RATE) > 0;
+    public boolean onBoostTick(ItemStack container, double propellingRate) {
+        int energyNeeded = (int) Math.ceil(BOOST_CONSUMPTION_RATE * propellingRate);
+        return this.consume(container, energyNeeded) > 0;
     }
 
     @Override
     public boolean canAbsorbCollision(ItemStack container, float damage) {
         int energyNeeded = (int) Math.ceil(damage * COLLISION_ABSORB_RATE);
         return this.consume(container, energyNeeded) > 0;
+    }
+
+    @Override
+    public String hudInfo(ItemStack stack, double propellingRate) {
+        int consumptionRate = (int) Math.ceil(BOOST_CONSUMPTION_RATE * propellingRate);
+        consumptionRate += FLIGHT_CONSUMPTION_RATE / 20; // add the base flight consumption rate.
+
+        int storedEnergy = this.getEnergyStored(stack);
+//        int percentCharge = storedEnergy * 100 / this.capacity;
+
+        int flightTimeRemaining = Math.max(storedEnergy / (consumptionRate * 20), 0); // in seconds
+
+        String flightTimeString;
+        if (flightTimeRemaining > HOUR_IN_SECONDS) {
+            flightTimeString = String.format("%dh", flightTimeRemaining / HOUR_IN_SECONDS);
+        } else if (flightTimeRemaining > MINUTE_IN_SECONDS) {
+            flightTimeString = String.format("%dm", flightTimeRemaining / MINUTE_IN_SECONDS);
+        } else {
+            flightTimeString = String.format("%ds", flightTimeRemaining);
+        }
+
+        return String.format("%dRF/t - %s", consumptionRate, flightTimeString);
     }
 
     /* ---------------------------------------------------------------- */

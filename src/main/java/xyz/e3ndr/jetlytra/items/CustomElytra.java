@@ -40,13 +40,17 @@ public abstract class CustomElytra extends ItemArmorElytra {
      * @return true, if there was enough energy to boost. false if the boost failed
      *         (e.g. not enough energy).
      */
-    public abstract boolean onBoostTick(ItemStack container);
+    public abstract boolean onBoostTick(ItemStack container, double propellingRate);
 
     /**
      * @return true, if the elytra can absorb the collision damage. false if the
      *         collision should be handled normally (e.g. not enough energy).
      */
     public abstract boolean canAbsorbCollision(ItemStack container, float damage);
+
+    public String hudInfo(ItemStack stack, double propellingRate) {
+        return null;
+    }
 
     /* ---------------------------------------------------------------- */
     /* ---------------------------------------------------------------- */

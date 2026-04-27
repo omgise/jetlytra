@@ -15,7 +15,7 @@ public class ClientProxy extends CommonProxy {
         super.init(event);
 
         ModBase.LOG.info("Doing Client preInit.");
-        FMLCommonHandler.instance().bus().register(new ClientKeyHandler());
+        FMLCommonHandler.instance().bus().register(new ClientHandler());
     }
 
 }

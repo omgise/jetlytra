@@ -42,7 +42,7 @@ public class CustomElytraHandler {
             return; // not propelling, skip
         }
 
-        if (elytra.onBoostTick(stack)) {
+        if (elytra.onBoostTick(stack, propellingRate)) {
             // Inspired from:
             // https://github.com/Roadhog360/Et-Futurum-Requiem/blob/master/src/main/java/ganymedes01/etfuturum/entities/EntityBoostingFireworkRocket.java#L49C117-L53C116
             Vec3 vec3d = entity.getLookVec();
