@@ -9,12 +9,16 @@ import xyz.e3ndr.jetlytra.ModRegistry;
 
 public abstract class CustomElytra extends ItemArmorElytra {
 
-    public CustomElytra(String id) {
+    public final double acceleration;
+
+    public CustomElytra(String id, double acceleration) {
         super();
         this.setUnlocalizedNameWithPrefix(id);
         this.setTextureName(id);
         this.setMaxStackSize(1);
         this.setCreativeTab(ModRegistry.tab);
+
+        this.acceleration = acceleration;
 
         GameRegistry.registerItem(this, id);
     }

@@ -18,8 +18,8 @@ public class FluxElytra extends CustomElytra implements IEnergyContainerItem {
     private final int capacity;
     private final int maxReceive;
 
-    public FluxElytra(String id, int maxEnergy, int maxInput) {
-        super(id);
+    public FluxElytra(String id, int maxEnergy, int maxInput, double acceleration) {
+        super(id, acceleration);
         this.capacity = maxEnergy;
         this.maxReceive = maxInput;
     }

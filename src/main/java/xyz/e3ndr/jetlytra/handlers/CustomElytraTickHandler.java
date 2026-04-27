@@ -19,21 +19,26 @@ public class CustomElytraTickHandler {
     @SubscribeEvent
     public void onLivingUpdate(LivingUpdateEvent event) {
         EntityLivingBase entity = event.entityLiving;
+        IElytraPlayer elytraPlayer;
+        {
 
-        if (!(entity instanceof IElytraPlayer)) {
-            return; // not a player, skip
+            if (!(entity instanceof IElytraPlayer)) {
+                return; // not a player, skip
+            }
+
+            elytraPlayer = (IElytraPlayer) entity;
         }
 
-        if (!((IElytraPlayer) entity).etfu$isElytraFlying()) {
+        if (!elytraPlayer.etfu$isElytraFlying()) {
             return; // not flying, skip
         }
 
-        ItemStack stack = CustomElytra.getCustomElytra(entity);
+        ItemStack stack = CustomElytra.getCustomElytra(event.entityLiving);
         if (stack == null) {
             return; // no custom elytra, skip
         }
 
-        boolean isPropelling = propelState.getOrDefault(entity, false);
+        boolean isPropelling = propelState.getOrDefault(elytraPlayer, false);
         if (!isPropelling) {
             return; // not propelling, skip
         }
@@ -41,12 +46,17 @@ public class CustomElytraTickHandler {
         CustomElytra elytra = (CustomElytra) stack.getItem();
 
         if (elytra.onBoostTick(stack)) {
-            // Verbatim:
+            // Inspired from:
             // https://github.com/Roadhog360/Et-Futurum-Requiem/blob/master/src/main/java/ganymedes01/etfuturum/entities/EntityBoostingFireworkRocket.java#L49C117-L53C116
             Vec3 vec3d = entity.getLookVec();
-            entity.motionX += vec3d.xCoord * 0.1D + (vec3d.xCoord * 1.5D - entity.motionX) * 0.5D;
-            entity.motionY += vec3d.yCoord * 0.1D + (vec3d.yCoord * 1.5D - entity.motionY) * 0.5D;
-            entity.motionZ += vec3d.zCoord * 0.1D + (vec3d.zCoord * 1.5D - entity.motionZ) * 0.5D;
+
+            double dx = vec3d.xCoord * 0.1 + (vec3d.xCoord * 1.5 - entity.motionX) * 0.5;
+            double dy = vec3d.yCoord * 0.1 + (vec3d.yCoord * 1.5 - entity.motionY) * 0.5;
+            double dz = vec3d.zCoord * 0.1 + (vec3d.zCoord * 1.5 - entity.motionZ) * 0.5;
+
+            entity.motionX += dx * elytra.acceleration;
+            entity.motionY += dy * elytra.acceleration;
+            entity.motionZ += dz * elytra.acceleration;
             entity.velocityChanged = true;
         }
     }

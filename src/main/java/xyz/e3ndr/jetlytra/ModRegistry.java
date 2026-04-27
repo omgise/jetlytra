@@ -17,10 +17,10 @@ public class ModRegistry {
 
     // https://oldcofh.github.io/docs/thermal-expansion/storage/flux-capacitors/#tiers
     // @formatter:off
-    public static final Item itemLeadstoneFluxLytra = new FluxElytra("leadstone_flux_elytra",     80_000,    200);
-    public static final Item itemHardenedFluxLytra  = new FluxElytra("hardened_flux_elytra",     400_000,    800);
-    public static final Item itemRedstoneFluxLytra  = new FluxElytra("redstone_flux_elytra",   4_000_000,  8_000);
-    public static final Item itemResonantFluxLytra  = new FluxElytra("resonant_flux_elytra",  20_000_000, 32_000);
+    public static final Item itemLeadstoneFluxLytra = new FluxElytra("leadstone_flux_elytra",     80_000,    200, 0.1 );
+    public static final Item itemHardenedFluxLytra  = new FluxElytra("hardened_flux_elytra",     400_000,    800, 0.15);
+    public static final Item itemRedstoneFluxLytra  = new FluxElytra("redstone_flux_elytra",   4_000_000,  8_000, 0.3 );
+    public static final Item itemResonantFluxLytra  = new FluxElytra("resonant_flux_elytra",  20_000_000, 32_000, 0.5 );
     // @formatter:on
 
     public static void preInit() {
