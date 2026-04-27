@@ -5,21 +5,21 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import xyz.e3ndr.jetlytra.handlers.CustomElytraTickHandler;
+import xyz.e3ndr.jetlytra.handlers.CustomElytraHandler;
 
 public class MessagePropelling implements IMessage, IMessageHandler<MessagePropelling, IMessage> {
-    public boolean isPropelling;
+    public double propellingRate;
 
     public MessagePropelling() {}
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.isPropelling = buf.readBoolean();
+        this.propellingRate = buf.readDouble();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeBoolean(this.isPropelling);
+        buf.writeDouble(this.propellingRate);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class MessagePropelling implements IMessage, IMessageHandler<MessagePrope
             return null;
         }
 
-        CustomElytraTickHandler.propelState.put(entityPlayer, msg.isPropelling);
+        CustomElytraHandler.propelRates.put(entityPlayer, msg.propellingRate);
         return null;
     }
 

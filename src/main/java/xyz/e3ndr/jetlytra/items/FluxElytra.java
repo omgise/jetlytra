@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 public class FluxElytra extends CustomElytra implements IEnergyContainerItem {
     private static final int FLIGHT_CONSUMPTION_RATE = 100; // RF/second
     private static final int BOOST_CONSUMPTION_RATE = 200; // RF/tick key held down
+    private static final int COLLISION_ABSORB_RATE = 300; // RF/damage
 
     private final int capacity;
     private final int maxReceive;
@@ -31,6 +32,12 @@ public class FluxElytra extends CustomElytra implements IEnergyContainerItem {
     @Override
     public boolean onBoostTick(ItemStack container) {
         return this.consume(container, BOOST_CONSUMPTION_RATE) > 0;
+    }
+
+    @Override
+    public boolean canAbsorbCollision(ItemStack container, float damage) {
+        int energyNeeded = (int) Math.ceil(damage * COLLISION_ABSORB_RATE);
+        return this.consume(container, energyNeeded) > 0;
     }
 
     /* ---------------------------------------------------------------- */

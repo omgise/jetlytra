@@ -8,9 +8,12 @@ import xyz.e3ndr.jetlytra.ModMessages;
 import xyz.e3ndr.jetlytra.net.MessagePropelling;
 
 public class ClientKeyHandler {
+    private static final int PROPULSION_START_TICKS = 40; // ticks, how long it takes to reach full propulsion rate. 20t = 1s.
+
     private static final Minecraft mc = Minecraft.getMinecraft();
 
-    private boolean lastPropellingState = false;
+    private int propellingTicks = 0;
+    private double propellingRate = 0;
 
     @SubscribeEvent
     public void onClientTick(ClientTickEvent e) {
@@ -22,14 +25,21 @@ public class ClientKeyHandler {
         }
 
         boolean isPropelling = mc.gameSettings.keyBindForward.getIsKeyPressed();
-        if (isPropelling == this.lastPropellingState) {
-            return;
+        if (!isPropelling) {
+            this.propellingTicks = 0;
+        } else {
+            this.propellingTicks++;
         }
 
-        this.lastPropellingState = isPropelling;
+        double newRate = Math.min(1, (double) this.propellingTicks / PROPULSION_START_TICKS);
+        if (newRate == this.propellingRate) {
+            return; // No change in propulsion rate, skip sending message
+        }
+
+        this.propellingRate = newRate;
 
         MessagePropelling message = new MessagePropelling();
-        message.isPropelling = isPropelling;
+        message.propellingRate = this.propellingRate;
         ModMessages.network.sendToServer(message);
     }
 

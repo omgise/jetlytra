@@ -23,6 +23,35 @@ public abstract class CustomElytra extends ItemArmorElytra {
         GameRegistry.registerItem(this, id);
     }
 
+    public static ItemStack getCustomElytra(EntityLivingBase entity) {
+        ItemStack stack = ItemArmorElytra.getElytra(entity);
+        if (stack != null && stack.getItem() instanceof CustomElytra) {
+            return stack;
+        } else {
+            return null;
+        }
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* ---------------------------------------------------------------- */
+    /* ---------------------------------------------------------------- */
+
+    /**
+     * @return true, if there was enough energy to boost. false if the boost failed
+     *         (e.g. not enough energy).
+     */
+    public abstract boolean onBoostTick(ItemStack container);
+
+    /**
+     * @return true, if the elytra can absorb the collision damage. false if the
+     *         collision should be handled normally (e.g. not enough energy).
+     */
+    public abstract boolean canAbsorbCollision(ItemStack container, float damage);
+
+    /* ---------------------------------------------------------------- */
+    /* ---------------------------------------------------------------- */
+    /* ---------------------------------------------------------------- */
+
     @Override
     public String getTextureDomain() {
         return "jetlytra";
@@ -42,21 +71,6 @@ public abstract class CustomElytra extends ItemArmorElytra {
     @Override
     public boolean getIsRepairable(ItemStack toRepair, ItemStack repairMaterial) {
         return false;
-    }
-
-    /**
-     * @return true, if there was enough energy to boost. false if the boost failed
-     *         (e.g. not enough energy).
-     */
-    public abstract boolean onBoostTick(ItemStack container);
-
-    public static ItemStack getCustomElytra(EntityLivingBase entity) {
-        ItemStack stack = ItemArmorElytra.getElytra(entity);
-        if (stack != null && stack.getItem() instanceof CustomElytra) {
-            return stack;
-        } else {
-            return null;
-        }
     }
 
 }

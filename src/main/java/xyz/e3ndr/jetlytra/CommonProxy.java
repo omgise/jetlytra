@@ -6,7 +6,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.common.MinecraftForge;
-import xyz.e3ndr.jetlytra.handlers.CustomElytraTickHandler;
+import xyz.e3ndr.jetlytra.handlers.CustomElytraHandler;
 import xyz.e3ndr.jetlytra.net.EFStartElytraFlyingHandlerOverride;
 
 public class CommonProxy {
@@ -36,7 +36,7 @@ public class CommonProxy {
         ModBase.LOG.info("Doing init.");
 
         ModRegistry.init();
-        MinecraftForge.EVENT_BUS.register(new CustomElytraTickHandler());
+        MinecraftForge.EVENT_BUS.register(new CustomElytraHandler());
     }
 
     /**
