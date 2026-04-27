@@ -66,6 +66,10 @@ public class ClientHandler {
             return;
         }
 
+        if (!mc.inGameHasFocus) {
+            return; // paused, tabbed out, etc. skip
+        }
+
         if (mc.thePlayer == null) {
             return;
         }
