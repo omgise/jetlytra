@@ -1,3 +1,5 @@
+import groovy.json.JsonOutput
+
 buildscript {
     repositories {
         mavenCentral()
@@ -11,31 +13,91 @@ buildscript {
         }
     }
     dependencies {
-        classpath ('com.anatawa12.forge:ForgeGradle:1.2-1.0.+') {
+        classpath ("com.anatawa12.forge:ForgeGradle:1.2-1.0.+") {
             changing = true
         }
     }
 }
 
-apply plugin: 'forge'
-apply plugin: 'java'
+apply plugin: "forge"
+apply plugin: "java"
 compileJava {
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
+    sourceCompatibility = project.javaVersion
+    targetCompatibility = project.javaVersion
 }
 dependencies {
-    compile 'org.ow2.asm:asm-all:5.0.3'
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "org.ow2.asm:asm-all:5.0.3"
+    compile fileTree(dir: "libs", include: ["*.jar"])
 }
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+sourceCompatibility = project.javaVersion
+targetCompatibility = project.javaVersion
 
-version = "1.0.0"
-group = "xyz.e3ndr.jetlytra"
-archivesBaseName = "JetLytra [1.7.10]"
+version = "${project.mcVersion}-${project.modVersion}"
+archivesBaseName = project.modName
+
+def buildForgeDeps = { raw, prefix ->
+    def list = raw
+        ?.split(",")
+        ?.collect { it.trim() }
+        ?.findAll { it }   // removes empty / blank entries
+        ?: []
+
+    return list
+        .collect { "${prefix}:${it}" }
+        .join(";")
+}
+
+ext {
+    modAuthors = JsonOutput.toJson(project.modAuthors.split(","))
+    modDependencies = JsonOutput.toJson(project.modDependencies.split(","))
+    modDependenciesAnnotation = [
+        buildForgeDeps(project.modDependenciesRequiredAfter, "required-after"),
+        buildForgeDeps(project.modDependenciesRequiredBefore, "required-before")
+    ]
+    .findAll { it } // drop empty parts
+    .join(";")
+}
 
 minecraft {
-    version = "1.7.10-10.13.4.1614-1.7.10"
+    version = project.forgeVersion
     runDir = "run"
+
+    replaceIn "Tokens.java"
+    replace "@MODID@", project.modId
+    replace "@MODGROUP@", project.group
+    replace "@MODNAME@", project.modName
+    replace "@MODVERSION@", project.modVersion
+    replace "@MCVERSION@", project.mcVersion
+    replace "@MODDEPENDENCIES@", modDependenciesAnnotation
+}
+
+processResources {
+    inputs.property "modid", project.modId
+    inputs.property "modname", project.modName
+    inputs.property "modVersion", project.modVersion
+    inputs.property "mcVersion", project.mcVersion
+    inputs.property "modDescription", project.modDescription
+    inputs.property "modUrl", project.modUrl
+    inputs.property "modAuthors", modAuthors
+    inputs.property "modDependencies", modDependencies
+
+    from(sourceSets.main.resources.srcDirs) {
+        include "mcmod.info"
+
+        expand([
+                modid: project.modId,
+                name: project.modName,
+                modVersion: project.modVersion,
+                mcVersion: project.mcVersion,
+                modDescription: project.modDescription,
+                modUrl: project.modUrl,
+                modAuthors: modAuthors,
+                modDependencies: modDependencies
+        ])
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "mcmod.info"
+    }
 }

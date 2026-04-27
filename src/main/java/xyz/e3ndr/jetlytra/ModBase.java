@@ -10,10 +10,10 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import xyz.e3ndr.jetlytra.client.ClientProxy;
 
-@Mod(modid = "jetlytra", version = "1.0.0", name = "JetLytra", acceptedMinecraftVersions = "[1.7.10]", dependencies = "required-after:etfuturum;required-after:ThermalExpansion;required-after:ThermalDynamics;required-after:ThermalFoundation")
+@Mod(modid = Tokens.MODID, version = Tokens.MODVERSION, name = Tokens.MODNAME, acceptedMinecraftVersions = "[" + Tokens.MCVERSION + "]", dependencies = Tokens.MODDEPENDENCIES)
 public class ModBase {
 
-    public static final Logger LOG = LogManager.getLogger("jetlytra");
+    public static final Logger LOG = LogManager.getLogger(Tokens.MODID);
 
     @SidedProxy(clientSide = "xyz.e3ndr.jetlytra.client.ClientProxy", serverSide = "xyz.e3ndr.jetlytra.CommonProxy")
     private static CommonProxy proxy;

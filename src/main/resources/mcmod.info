@@ -1,15 +1,12 @@
 [
 	{
-		"modid": "jetlytra",
-		"name": "xyz.e3ndr.jetlytra",
-		"description": "Powered Elytras, for 1.7.10.",
-		"version": "1.0.0",
-		"mcversion": "${mcversion}",
-		"url": "https://github.com/e3ndr/JetLytra",
-		"updateUrl": "",
-		"authorList": ["e3ndr"],
-		"logoFile": "",
-		"screenshots": [],
-		"dependencies": ["ThermalExpansion", "etfuturum"]
+		"modid": "${modid}",
+		"name": "${name}",
+		"version": "${modVersion}",
+		"mcversion": "${mcVersion}",
+		"description": "${modDescription}",
+		"url": "${modUrl}",
+		"authorList": ${modAuthors},
+		"dependencies": ${modDependencies}
 	}
 ]
