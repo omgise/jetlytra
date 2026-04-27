@@ -14,7 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class FluxElytra extends CustomElytra implements IEnergyContainerItem {
     private static final int FLIGHT_CONSUMPTION_RATE = 100; // RF/second
-    private static final int BOOST_CONSUMPTION_RATE = 200; // RF/tick key held down
+    private static final int BOOST_CONSUMPTION_RATE = 1000; // RF/tick key held down, still factors in maxAcceleration and propellingRate.
     private static final int COLLISION_ABSORB_RATE = 300; // RF/damage
 
     private static final int HOUR_IN_SECONDS = (int) TimeUnit.HOURS.toSeconds(1);
@@ -23,8 +23,8 @@ public class FluxElytra extends CustomElytra implements IEnergyContainerItem {
     private final int capacity;
     private final int maxReceive;
 
-    public FluxElytra(String id, int maxEnergy, int maxInput, double acceleration) {
-        super(id, acceleration);
+    public FluxElytra(String id, int maxEnergy, int maxInput, double maxAcceleration, int accelerationTicks) {
+        super(id, maxAcceleration, accelerationTicks);
         this.capacity = maxEnergy;
         this.maxReceive = maxInput;
     }
@@ -35,7 +35,7 @@ public class FluxElytra extends CustomElytra implements IEnergyContainerItem {
 
     @Override
     public boolean onBoostTick(ItemStack container, double propellingRate) {
-        int energyNeeded = (int) Math.ceil(BOOST_CONSUMPTION_RATE * propellingRate);
+        int energyNeeded = (int) Math.ceil(BOOST_CONSUMPTION_RATE * this.maxAcceleration * propellingRate);
         return this.consume(container, energyNeeded) > 0;
     }
 
@@ -47,7 +47,7 @@ public class FluxElytra extends CustomElytra implements IEnergyContainerItem {
 
     @Override
     public String hudInfo(ItemStack stack, double propellingRate) {
-        int consumptionRate = (int) Math.ceil(BOOST_CONSUMPTION_RATE * propellingRate);
+        int consumptionRate = (int) Math.ceil(BOOST_CONSUMPTION_RATE * this.maxAcceleration * propellingRate);
         consumptionRate += FLIGHT_CONSUMPTION_RATE / 20; // add the base flight consumption rate.
 
         int storedEnergy = this.getEnergyStored(stack);

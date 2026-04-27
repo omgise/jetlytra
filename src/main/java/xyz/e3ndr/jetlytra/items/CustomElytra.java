@@ -9,16 +9,18 @@ import xyz.e3ndr.jetlytra.ModRegistry;
 
 public abstract class CustomElytra extends ItemArmorElytra {
 
-    public final double acceleration;
+    public final double maxAcceleration;
+    public final int accelerationTicks; // ticks required to reach max acceleration
 
-    public CustomElytra(String id, double acceleration) {
+    public CustomElytra(String id, double maxAcceleration, int accelerationTicks) {
         super();
         this.setUnlocalizedNameWithPrefix(id);
         this.setTextureName(id);
         this.setMaxStackSize(1);
         this.setCreativeTab(ModRegistry.tab);
 
-        this.acceleration = acceleration;
+        this.maxAcceleration = maxAcceleration;
+        this.accelerationTicks = accelerationTicks;
 
         GameRegistry.registerItem(this, id);
     }

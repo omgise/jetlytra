@@ -15,8 +15,6 @@ import xyz.e3ndr.jetlytra.items.CustomElytra;
 import xyz.e3ndr.jetlytra.net.MessagePropelling;
 
 public class ClientHandler {
-    private static final int PROPULSION_START_TICKS = 40; // ticks, how long it takes to reach full propulsion rate. 20t = 1s.
-
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     private int propellingTicks = 0;
@@ -27,9 +25,21 @@ public class ClientHandler {
         if (event.phase != Phase.START) {
             return;
         }
+
         if (mc.thePlayer == null) {
             return;
         }
+
+        if (!((IElytraPlayer) mc.thePlayer).etfu$isElytraFlying()) {
+            return; // not flying, skip
+        }
+
+        ItemStack stack = CustomElytra.getCustomElytra(mc.thePlayer);
+        if (stack == null) {
+            return; // no custom elytra, skip
+        }
+
+        CustomElytra elytra = (CustomElytra) stack.getItem();
 
         boolean isPropelling = mc.gameSettings.keyBindForward.getIsKeyPressed();
         if (!isPropelling) {
@@ -38,7 +48,7 @@ public class ClientHandler {
             this.propellingTicks++;
         }
 
-        double newRate = Math.min(1, (double) this.propellingTicks / PROPULSION_START_TICKS);
+        double newRate = Math.min(1, (double) this.propellingTicks / elytra.accelerationTicks);
         if (newRate == this.propellingRate) {
             return; // No change in propulsion rate, skip sending message
         }
@@ -55,6 +65,7 @@ public class ClientHandler {
         if (event.phase != Phase.END) {
             return;
         }
+
         if (mc.thePlayer == null) {
             return;
         }

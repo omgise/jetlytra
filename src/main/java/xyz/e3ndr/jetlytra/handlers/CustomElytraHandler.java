@@ -51,9 +51,9 @@ public class CustomElytraHandler {
             double dy = vec3d.yCoord * 0.1 + (vec3d.yCoord * 1.5 - entity.motionY) * 0.5;
             double dz = vec3d.zCoord * 0.1 + (vec3d.zCoord * 1.5 - entity.motionZ) * 0.5;
 
-            entity.motionX += dx * elytra.acceleration * propellingRate;
-            entity.motionY += dy * elytra.acceleration * propellingRate;
-            entity.motionZ += dz * elytra.acceleration * propellingRate;
+            entity.motionX += dx * elytra.maxAcceleration * propellingRate;
+            entity.motionY += dy * elytra.maxAcceleration * propellingRate;
+            entity.motionZ += dz * elytra.maxAcceleration * propellingRate;
             entity.velocityChanged = true;
         }
     }
