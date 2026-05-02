@@ -34,6 +34,11 @@ public class FluxElytra extends CustomElytra implements IEnergyContainerItem {
     /* ---------------------------------------------------------------- */
 
     @Override
+    public void onFlightTick(ItemStack container) {
+        this.consume(container, FLIGHT_CONSUMPTION_RATE);
+    }
+
+    @Override
     public boolean onBoostTick(ItemStack container, double propellingRate) {
         int energyNeeded = (int) Math.ceil(BOOST_CONSUMPTION_RATE * this.maxAcceleration * propellingRate);
         return this.consume(container, energyNeeded) > 0;
@@ -70,15 +75,6 @@ public class FluxElytra extends CustomElytra implements IEnergyContainerItem {
     /* ---------------------------------------------------------------- */
     /* ---------------------------------------------------------------- */
     /* ---------------------------------------------------------------- */
-
-    @Override
-    public void setDamage(ItemStack stack, int damage) {
-        // Instead of actually damaging the item, we will just ignore this and
-        // update the energy. _Probably_, only EtFuturum will call this method. In their
-        // code, they tell the game to damage the item by 1. So.... we'll assume that's
-        // the only case this method can get called :p
-        this.consume(stack, FLIGHT_CONSUMPTION_RATE);
-    }
 
     @Override
     public boolean isDamaged(ItemStack stack) {

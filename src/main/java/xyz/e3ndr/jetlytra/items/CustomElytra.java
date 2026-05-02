@@ -38,6 +38,8 @@ public abstract class CustomElytra extends ItemArmorElytra {
     /* ---------------------------------------------------------------- */
     /* ---------------------------------------------------------------- */
 
+    public abstract void onFlightTick(ItemStack container);
+
     /**
      * @return true, if there was enough energy to boost. false if the boost failed
      *         (e.g. not enough energy).
@@ -57,6 +59,15 @@ public abstract class CustomElytra extends ItemArmorElytra {
     /* ---------------------------------------------------------------- */
     /* ---------------------------------------------------------------- */
     /* ---------------------------------------------------------------- */
+
+    @Override
+    public void setDamage(ItemStack stack, int damage) {
+        // Instead of actually damaging the item, we will just ignore this and
+        // update the energy. _Probably_, only EtFuturum will call this method. In their
+        // code, they tell the game to damage the item by 1. So.... we'll assume that's
+        // the only case this method can get called :p
+        this.onFlightTick(stack);
+    }
 
     @Override
     public void onEquipped(ItemStack itemstack, EntityLivingBase player) {
