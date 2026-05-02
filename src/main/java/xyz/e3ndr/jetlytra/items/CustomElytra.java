@@ -59,6 +59,31 @@ public abstract class CustomElytra extends ItemArmorElytra {
     /* ---------------------------------------------------------------- */
 
     @Override
+    public void onEquipped(ItemStack itemstack, EntityLivingBase player) {
+        // The EnderIO wireless charger calls setItem when the Elytra is equipped in
+        // Baubles, which will cause the equip sound to be spammed until the Elytra is
+        // fully charged (or taken out of Baubles).
+        //
+        // So, we need to scan the stacktrace and see if the equip action is being
+        // triggered by the wireless charger. If it is, we won't call super.
+        //
+        // TODO, there may be other mods that have similar behavior.
+        // Also TODO: this is a hotpath. Could potentially look into Mixins in the
+        // future to patch EnderIO directly instead of doing this hacky stacktrace
+        // scanning.
+
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        for (StackTraceElement element : stackTrace) {
+            if (element.getClassName().endsWith(".WirelessChargerController")) {
+                return;
+            }
+        }
+
+        // Allow the sound to be played.
+        super.onEquipped(itemstack, player);
+    }
+
+    @Override
     public String getTextureDomain() {
         return "jetlytra";
     }
